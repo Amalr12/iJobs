@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-   <div><div className="md:flex flex-col items-center text-center p-5 justify-center h-70 md:m-10 m-5 bg-linear-to-r from-green-800 to-green-400 rounded-lg">
+   <div><div className="md:flex flex-col items-center text-center p-5 justify-center h-96 md:m-10 m-5 bg-linear-to-r from-green-800 to-green-400 rounded-lg">
     <h1 className="md:text-4xl text-xl font-bold text-white">Find Your Dream Job Today</h1>
     <h1 className="md:text-lg text-sm text-white text-center">
       Explore thousands of opportunities from top companies and take the next step in your career with confidence.
