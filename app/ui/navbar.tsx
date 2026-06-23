@@ -1,11 +1,27 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Menu } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Menu, LogOut, User } from 'lucide-react';
 
 export default function Navbar() {
-      const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    const [currentUser, setCurrentUser] = useState<any>(null);
+
+    useEffect(() => {
+        const user = localStorage.getItem("currentUser");
+
+        if (user) {
+            setCurrentUser(JSON.parse(user));
+        }
+    }, []);
+    const handleLogout = () => {
+        localStorage.removeItem("currentUser");
+        setCurrentUser(null);
+
+        window.location.href = "/";
+    };
     return (
         <div>
             <nav className={`bg-white text-green-600 p-4 shadow-md relative z-50 md:m-10 m-5 rounded-lg`}>
@@ -15,12 +31,12 @@ export default function Navbar() {
                     <div className="flex items-center justify-between">
                         <Link href={"/"}>
                             <div className="flex items-center cursor-pointer">
-                              
+
                                 <h1
-                                    
+
                                     style={{
                                         fontWeight: 700,
-                                        
+
                                         fontSize: "1.5rem",
                                         marginLeft: "0.5rem",
                                     }}
@@ -38,44 +54,78 @@ export default function Navbar() {
                     </div>
 
                     {/* Desktop Menu */}
-                    <div
-                        className={` hidden md:flex items-center gap-4 text-white`}
-                    >
-                        <Link href={"/register"}>
-                            <button className="border border-green-700 text-green-700 bg-white rounded hover:text-black px-4 py-2 rounded cursor-pointer" onClick={() => setOpen(false)}>
-                                Register
-                            </button>
-                        </Link>
+                    <div className="hidden md:flex items-center gap-4">
+                        {currentUser ? (
+                            <>
+                                <div className="flex items-center gap-2 text-green-700">
+                                    <User size={22} />
+                                    <span>{currentUser.name}</span>
+                                </div>
 
-                        <Link href={"/login"}>
-                            <button className="border border-white text-white bg-linear-to-r from-green-800 to-green-400 rounded hover:text-black hover:bg-linear-to-r from-green-800 to-green-400 px-4 py-2 rounded cursor-pointer" onClick={() => setOpen(false)}>
-                                Login
-                            </button>
-                        </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded"
+                                >
+                                    <LogOut size={18} />
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/register">
+                                    <button className="border border-green-700 text-green-700 bg-white px-4 py-2 rounded">
+                                        Register
+                                    </button>
+                                </Link>
 
-
+                                <Link href="/login">
+                                    <button className="bg-green-600 text-white px-4 py-2 rounded">
+                                        Login
+                                    </button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 
 
                 {open && (
-                    <div className="absolute top-full left-0 w-full bg-black text-white flex flex-col items-center gap-4 py-6 md:hidden rounded-lg shadow-lg">
 
-                       
+                    currentUser ? (
+                        <>
+                            <div className="flex items-center gap-2">
+                                <User size={22} />
+                                <span>{currentUser.name}</span>
+                            </div>
 
-                        <Link href={"/register"}>
-                            <button className="border border-green-700 text-green-700 bg-white rounded hover:text-black px-4 py-2 rounded cursor-pointer" onClick={() => setOpen(false)}>
-                                Register
+                            <button
+                                onClick={handleLogout}
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                                Logout
                             </button>
-                        </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/register">
+                                <button
+                                    className="border border-green-700 text-green-700 bg-white px-4 py-2 rounded"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    Register
+                                </button>
+                            </Link>
 
-                        <Link href={"/login"}>
-                            <button className="border border-white text-white bg-linear-to-r from-green-800 to-green-400 rounded hover:text-black hover:bg-linear-to-r from-green-800 to-green-400 px-4 py-2 rounded cursor-pointer" onClick={() => setOpen(false)}>
-                                Login
-                            </button>
-                        </Link>
-
-                    </div>
+                            <Link href="/login">
+                                <button
+                                    className="bg-green-600 text-white px-4 py-2 rounded"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    Login
+                                </button>
+                            </Link>
+                        </>
+                    )
                 )}
             </nav>
         </div>
