@@ -69,6 +69,7 @@ export default function JobForm({
       company,
       phone,
       resumeUrl: resume,
+      resumeViews: 0,
       status: "Pending",
       appliedAt: new Date().toLocaleDateString(),
     };

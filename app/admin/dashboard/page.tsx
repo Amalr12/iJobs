@@ -12,8 +12,11 @@ interface Application {
   id: number;
   userId: number;
   userName: string;
+  userEmail?: string;
   jobId: number;
   jobTitle: string;
+  resumeUrl?: string;
+  resumeViews?: number;
   status: "Pending" | "Approved" | "Rejected";
 }
 
@@ -53,8 +56,15 @@ useEffect(() => {
       "[]"
     );
 
+    const normalizedApplications = storedApplications.map(
+      (app: any) => ({
+        ...app,
+        resumeViews: app.resumeViews ?? 0,
+      })
+    );
+
     setJobs(storedJobs);
-    setApplications(storedApplications);
+    setApplications(normalizedApplications);
   }, []);
 
   // Add Job
@@ -119,6 +129,35 @@ useEffect(() => {
         updatedApplications
       )
     );
+  };
+
+  const viewResume = (id: number) => {
+    const updatedApplications = applications.map((app) => {
+      if (app.id !== id) return app;
+
+      const newViews = (app.resumeViews ?? 0) + 1;
+      return {
+        ...app,
+        resumeViews: newViews,
+      };
+    });
+
+    const clickedApp = updatedApplications.find(
+      (app) => app.id === id
+    );
+
+    if (!clickedApp?.resumeUrl) {
+      alert("Resume not available for this application.");
+      return;
+    }
+
+    setApplications(updatedApplications);
+    localStorage.setItem(
+      "applications",
+      JSON.stringify(updatedApplications)
+    );
+
+    window.open(clickedApp.resumeUrl, "_blank");
   };
 
   return (
@@ -243,7 +282,7 @@ useEffect(() => {
                 (app) => (
                   <div
                     key={app.id}
-                    className="border rounded p-4 mb-4"
+                    className="border flex justify-around rounded p-4 mb-4"
                   >
                     <h3>
                       {
@@ -267,7 +306,7 @@ useEffect(() => {
 
                     {app.status ===
                       "Pending" && (
-                        <div className="flex gap-3 mt-3">
+                        <div className="flex  gap-3 mt-3">
                           <button
                             onClick={() =>
                               updateStatus(
@@ -291,8 +330,20 @@ useEffect(() => {
                           >
                             Reject
                           </button>
+                          
                         </div>
                       )}
+                      {app.resumeViews !== undefined && (
+                        <p className="text-sm text-gray-600 mt-2">
+                          Resume views: {app.resumeViews}
+                        </p>
+                      )}
+                      <button
+                        onClick={() => viewResume(app.id)}
+                        className="bg-green-500 text-white px-4 py-2 rounded mt-3"
+                      >
+                        View Resume
+                      </button>
                   </div>
                 )
               )}
