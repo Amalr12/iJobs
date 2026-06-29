@@ -6,15 +6,11 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] =
-    useState("");
+  const [email, setEmail] =useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] =useState("");
 
-  const handleLogin = (
-    e: React.FormEvent
-  ) => {
+  const handleLogin = ( e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const users = JSON.parse(
@@ -36,6 +32,7 @@ export default function LoginPage() {
       "currentUser",
       JSON.stringify(user)
     );
+    
 
     if (user.email === "admin@gmail.com") {
       router.push(
