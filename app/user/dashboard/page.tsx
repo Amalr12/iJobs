@@ -24,7 +24,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-
+  role?: string;
 }
 
 export default function UserDashboard() {
@@ -315,14 +315,17 @@ export default function UserDashboard() {
               Profile
             </h2>
 
-            <p>
-              Name: Amal
-            </p>
-
-            <p>
-              Email:
-              amal@gmail.com
-            </p>
+            <div className="border rounded-lg p-4 bg-gray-50 space-y-2">
+              <p>
+                <span className="font-semibold">Name:</span> {user?.name || "Not available"}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span> {user?.email || "Not available"}
+              </p>
+              <p>
+                <span className="font-semibold">Role:</span> {user?.role || "user"}
+              </p>
+            </div>
           </div>
         )}
       </div>
